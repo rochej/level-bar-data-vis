@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>D3 Test</title>
+        <script type="text/javascript" src="d3.v3.js"></script>
+        <style type="text/css">
+            div.bar{
+                display: inline-block;
+                width: 20px;
+                height: 75px;
+                background-color: teal;
+                margin-right: 2px;
+            }
+            .axis path,
+            .axis line{
+                fill: none;
+                stroke: black;
+                shape-rendering: crispEdges;
+            }
+            .axis text{
+                font-family: sans-serif;
+                font-size: 11px
+            }
+
+        </style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            var dataset = [2,4,6,8]
+            d3.select("body")
+                .selectAll("p")
+                .data(dataset)
+                .enter()
+                .append("div")
+                .attr("class", "bar")
+                .style("height", function(d){
+                    return (d*5)+"px";
+                });
+            var svg = d3.select("body").append("svg");
+            var w = 500;
+            var h = 50;
+            svg.attr("width", w);
+            svg.attr("height", h);
+
+            var circles = svg.selectAll("circle")
+                            .data(dataset)
+                            .enter()
+                            .append("circle");
+            circles.attr("cx", function(d,i){
+                return (i * 50) + 25;
+            })
+                    .attr("cy", h/2)
+                    .attr("r", function(d){
+                        return d;
+                    });
+            var dataset2 = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
+                11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
+            var w = 500;
+            var h = 100;
+            var barPadding = 1;
+            var svg = d3.select("body")
+                        .append("svg")
+                        .attr("width", w)
+                        .attr("height", h);
+            svg.selectAll("rect")
+                .data(dataset2)
+                .enter()
+                .append("rect")
+                .attr("x", function(d,i){
+                    return i * (w/dataset2.length);
+                })
+                .attr("y", function(d){
+                    return h-d*4;
+                })
+                .attr("width", w / dataset2.length-barPadding)
+               .attr("height", function(d) {
+                    return d * 4;
+               })
+               .attr("fill", function(d) {
+                    return "rgb(0, 0, " + (d * 10) + ")";
+               });
+            svg.selectAll("text")
+                .data(dataset2)
+                .enter()
+                .append("text")
+                .text(function(d){
+                    return d;
+                })
+                .attr("x", function(d,i){
+                    return i * (w/dataset2.length) + 5;
+                })
+                .attr("y", function(d){
+                    return h - (d * 4) + 15;
+                })
+                .attr("fill", "white");
+        var dataset3 = [
+                [5, 20], [480, 90], [250, 50], [100, 33], [330, 95],
+                [410, 12], [475, 44], [25, 67], [85, 21], [220, 88]
+              ];
+        var xScale = d3.scale.linear()
+                        .domain([0, d3.max(dataset3, function(d){
+                            return d[0];
+                        })])
+                        .range([0,w]);
+        var yScale = d3.scale.linear()
+                            .domain([0, d3.max(dataset3, function(d){
+                                return d[1];
+                            })])
+                            .range([0,h])
+        var xAxis = d3.svg.axis()
+                        .scale(xScale)
+                        .orient("bottom");
+        var svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr ("height", h)
+            svg.selectAll("circle")
+                .data(dataset3)
+                .enter()
+                .append("circle")
+                .attr("cx", function(d){
+                    return xScale(d[0]);
+                })
+                .attr("cy", function(d){
+                    return yScale(d[1]);
+                })
+                .attr("r", function(d){
+                    return Math.sqrt(h-d[1]);
+                })
+            svg.append("g")
+                .attr("class", "axis")
+                .attr("transform", "translate(0, 90)")
+                .call(xAxis);
+
+
+
+        </script>
+
+
+    </body>
+</html>
